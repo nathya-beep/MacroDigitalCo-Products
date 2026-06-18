@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cover Letter Master — Generador de Cartas de Presentación Profesionales</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --accent: #1f4d3f;
+  --accent2: #a8843a;
+  --ink: #16181d;
+  --muted: #6b6f76;
+  --paper: #fff;
+  --soft: #f5f3f0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--soft);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header {
+  padding: 40px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--accent) 0%, #2a6b4f 100%);
+  color: white;
+}
+
+header h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+header p {
+  font-size: 20px;
+  opacity: 0.95;
+  margin-bottom: 24px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 14px 32px;
+  background: var(--accent2);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 2px solid var(--accent2);
+  color: var(--accent2);
+}
+
+.hero {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 36px;
+  margin-bottom: 24px;
+  color: var(--accent);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 60px 0;
+}
+
+.feature-card {
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.feature-card h3 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.feature-card p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.comparison {
+  margin: 60px 0;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+}
+
+.comparison h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 32px;
+  color: var(--accent);
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 24px;
+}
+
+.comparison-item {
+  padding: 20px;
+  border-left: 4px solid var(--accent2);
+}
+
+.comparison-item h4 {
+  margin-bottom: 12px;
+  color: var(--accent);
+}
+
+.comparison-item ul {
+  list-style: none;
+  margin-left: 0;
+}
+
+.comparison-item li {
+  padding: 6px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.comparison-item li:before {
+  content: "✓ ";
+  color: var(--accent);
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.pricing {
+  margin: 60px 0;
+  text-align: center;
+}
+
+.pricing h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  margin-bottom: 40px;
+  color: var(--accent);
+}
+
+.price-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.price {
+  font-family: 'Fraunces', serif;
+  font-size: 48px;
+  color: var(--accent2);
+  margin-bottom: 12px;
+}
+
+.price-desc {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.testimonials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin: 60px 0;
+}
+
+.testimonial {
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+  border-left: 4px solid var(--accent2);
+}
+
+.testimonial p {
+  color: var(--ink);
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.testimonial-author {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+footer {
+  background: var(--accent);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  margin-top: 80px;
+}
+
+footer p {
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin: 40px 0;
+  text-align: center;
+}
+
+.stat {
+  padding: 24px;
+}
+
+.stat-number {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  color: var(--accent2);
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 32px;
+  }
+  
+  .hero h2 {
+    font-size: 24px;
+  }
+  
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>📝 Cover Letter Master</h1>
+    <p>La herramienta #1 para cartas de presentación profesionales</p>
+    <a href="https://cover-letter-bice.vercel.app" class="btn">Comenzar Gratis →</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h2>Crea cartas de presentación que abren puertas</h2>
+    <p style="color: var(--muted); max-width: 600px; margin: 0 auto; font-size: 18px;">
+      10 templates profesionales, 6 idiomas, análisis inteligente y ejemplos comparativos. 
+      Diseñado para destacar entre 100+ candidatos.
+    </p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number">10</div>
+        <div class="stat-label">Templates Profesionales</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">6</div>
+        <div class="stat-label">Idiomas Completos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">100+</div>
+        <div class="stat-label">Ejemplos de Referencia</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Min Para Crear</div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <h3>📊 Análisis Inteligente</h3>
+        <p>Score dinámico 0-100 que mide personalización, logros, estructura y tono.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📚 Ejemplos Comparativos</h3>
+        <p>Aprende viendo cartas excelentes, promedio y débiles lado a lado.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💼 10 Industrias</h3>
+        <p>Finance, Tech, Sales, Creative, Healthcare, Executive, HR, Education, Logistics y más.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🌍 6 Idiomas</h3>
+        <p>Español, English, Português, Français, Italiano, Deutsch.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💾 Borradores Guardados</h3>
+        <p>Guarda hasta 5 versiones. Perfecto para aplicar a múltiples empresas.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⤓ Exporta Fácilmente</h3>
+        <p>PDF, Word, o copia al portapapeles. Listo para enviar en segundos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="comparison">
+  <div class="container">
+    <h3>¿Por qué Cover Letter Master?</h3>
+    <div class="comparison-grid">
+      <div class="comparison-item">
+        <h4>❌ SIN Cover Letter Master</h4>
+        <ul>
+          <li>Guías genéricas, sin ejemplos</li>
+          <li>No sabes si tu carta es suficientemente buena</li>
+          <li>Una sola estructura para todos</li>
+          <li>Sin feedback en tiempo real</li>
+          <li>Tardan horas en completar</li>
+          <li>Muy formal o muy casual</li>
+        </ul>
+      </div>
+      <div class="comparison-item">
+        <h4>✅ CON Cover Letter Master</h4>
+        <ul>
+          <li>10 templates para diferentes industrias</li>
+          <li>Score te dice exactamente dónde mejorar</li>
+          <li>Templates específicos por rol y empresa</li>
+          <li>Sugerencias que aparecen conforme escribes</li>
+          <li>5 minutos para crear una carta excelente</li>
+          <li>Tono perfecto para tu industria</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="container" style="width: 100%;">
+    <h2 style="text-align: center; font-family: 'Fraunces', serif; font-size: 28px; margin-bottom: 40px; color: var(--accent);">
+      Lo que dicen los usuarios
+    </h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+      <div class="testimonial">
+        <p>"Usé Cover Letter Master para aplicar a 3 empresas el mismo día. Todas me llamaron para entrevista. No puedo creer la diferencia que hizo tener cartas personalizadas."</p>
+        <div class="testimonial-author">— María, Marketing Manager, Madrid</div>
+      </div>
+      <div class="testimonial">
+        <p>"Como recién graduado, no sabía cómo escribir una carta profesional. Los ejemplos mostraron exactamente lo que buscaban. Ahora tengo 2 ofertas de trabajo."</p>
+        <div class="testimonial-author">— Diego, SWE Junior, México</div>
+      </div>
+      <div class="testimonial">
+        <p>"El análisis de score es increíble. Me mostró que estaba siendo muy casual. Cambié mi tono y mi tasa de respuesta subió 80%."</p>
+        <div class="testimonial-author">— Ana, Sales Director, Barcelona</div>
+      </div>
+      <div class="testimonial">
+        <p>"Finalmente tengo un tono consistente en todas mis aplicaciones. Y que tenga 6 idiomas es perfecto para mis búsquedas internacionales."</p>
+        <div class="testimonial-author">— Carla, UX Designer, Lisboa</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="container">
+    <h3>Precio Simple</h3>
+    <div class="price-card">
+      <div class="price">$34.99</div>
+      <div class="price-desc">Acceso de por vida + actualizaciones gratis</div>
+      <a href="https://www.etsy.com/shop/MacroDigitalCo" class="btn" style="width: 100%;">
+        Comprar en Etsy
+      </a>
+      <p style="margin-top: 16px; color: var(--muted); font-size: 12px;">
+        📌 Entrega instantánea • Sin suscripción • Acceso offline
+      </p>
+    </div>
+  </div>
+</section>
+
+<section style="background: white; padding: 60px 20px; margin: 60px 0;">
+  <div class="container">
+    <h2 style="font-family: 'Fraunces', serif; text-align: center; font-size: 28px; margin-bottom: 40px; color: var(--accent);">
+      Preguntas Frecuentes
+    </h2>
+    <div style="max-width: 700px; margin: 0 auto;">
+      <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--soft);">
+        <h4 style="color: var(--accent); margin-bottom: 8px;">¿Necesito descargar algo?</h4>
+        <p style="color: var(--muted);">No. Es un archivo HTML que abre en tu navegador. Funciona offline.</p>
+      </div>
+      <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--soft);">
+        <h4 style="color: var(--accent); margin-bottom: 8px;">¿Qué idiomas soporta?</h4>
+        <p style="color: var(--muted);">6 idiomas completos: Español, English, Português, Français, Italiano, Deutsch.</p>
+      </div>
+      <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--soft);">
+        <h4 style="color: var(--accent); margin-bottom: 8px;">¿Funciona en mobile?</h4>
+        <p style="color: var(--muted);">Sí, es 100% responsive. Funciona en teléfono, tablet y desktop.</p>
+      </div>
+      <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--soft);">
+        <h4 style="color: var(--accent); margin-bottom: 8px;">¿Puedo exportar a PDF y Word?</h4>
+        <p style="color: var(--muted);">Sí. PDF, Word (.doc), o copia al portapapeles.</p>
+      </div>
+      <div style="margin-bottom: 24px;">
+        <h4 style="color: var(--accent); margin-bottom: 8px;">¿Hay soporte?</h4>
+        <p style="color: var(--muted);">Sí. Email support en worksbejarano@gmail.com</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <h3 style="font-family: 'Fraunces', serif; margin-bottom: 16px;">Cover Letter Master</h3>
+    <p>Hecho por <strong>MacroDigital Co</strong></p>
+    <p style="margin-top: 16px; font-size: 12px;">© 2026 MacroDigitalCo. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+</body>
+</html>

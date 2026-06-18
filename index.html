@@ -640,6 +640,9 @@ main {
         <button class="btn btn-ghost" onclick="copyToClipboard()" title="Copiar al portapapeles">📋</button>
       </div>
       <button class="btn btn-ghost" onclick="showChecklist()" title="Revisar antes de enviar">✅ Checklist</button>
+      <button class="btn btn-ghost" onclick="showToneGuide()" title="Aprende sobre el tono elegido">🎭 Tono</button>
+      <button class="btn btn-ghost" onclick="improveText()" title="Optimizar frases débiles">✨ Mejorar Texto</button>
+      <button class="btn btn-ghost" onclick="showATSGuide()" title="Optimiza para ATS">🤖 ATS</button>
       <button class="btn btn-ghost" onclick="saveDraft()" title="Guardar este borrador">💾 Guardar</button>
       <button class="btn btn-ghost" onclick="showDrafts()" title="Ver borradores guardados">📂 Mis Borradores</button>
     </div>
@@ -1553,6 +1556,146 @@ function showChecklist() {
 
 function closeChecklist() {
   document.getElementById("checklist_modal").classList.remove("show");
+}
+
+function showToneGuide() {
+  const tones = {
+    formal: {
+      description: "Profesional, respetuoso, corporativo",
+      examples: ["honored to apply", "expertise", "strategic mindset", "respectfully"],
+      avoid: ["Hi", "love", "pretty good", "stuff"],
+      use: "Finance, Executive, Healthcare, Law"
+    },
+    casual: {
+      description: "Accesible, amistoso, genuino",
+      examples: ["excited about", "love working with", "passionate", "genuine"],
+      avoid: ["herewith", "pursuant to", "humbly submit"],
+      use: "Tech, Creative, Startups, Entry-level"
+    },
+    enthusiastic: {
+      description: "Energético, motivado, driven",
+      examples: ["thrilled", "passionate", "eager to contribute", "energized by"],
+      avoid: ["merely", "only", "might be able to"],
+      use: "Sales, Entry-level, Education, Nonprofits"
+    }
+  };
+
+  const tone = document.getElementById("f_tone").value;
+  const data = tones[tone] || tones.formal;
+
+  const modal = document.createElement("div");
+  modal.className = "modal show";
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width: 600px;">
+      <h2>🎭 ${tone.charAt(0).toUpperCase() + tone.slice(1).toUpperCase()}</h2>
+      
+      <div style="background: var(--uipanel); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+        <p style="margin-bottom: 8px;"><strong>Descripción:</strong></p>
+        <p style="color: var(--muted);">${data.description}</p>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <h4 style="margin-bottom: 8px;">✅ Palabras recomendadas:</h4>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          ${data.examples.map(e => `<span style="background: var(--accent); color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px;">${e}</span>`).join("")}
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <h4 style="margin-bottom: 8px;">❌ Evita:</h4>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          ${data.avoid.map(e => `<span style="background: #e0e0e0; color: #666; padding: 6px 10px; border-radius: 4px; font-size: 12px; text-decoration: line-through;">${e}</span>`).join("")}
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px; font-size: 12px; color: var(--muted); background: var(--soft); padding: 10px; border-radius: 6px;">
+        <strong>Mejor para:</strong> ${data.use}
+      </div>
+
+      <button class="btn btn-ghost" onclick="this.closest('.modal').remove()" style="width: 100%;">Entendido</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+function improveText() {
+  const preview = document.getElementById("preview");
+  let text = preview.innerText;
+  
+  const weakToStrong = [
+    { weak: /\bI think\b/gi, strong: "I am confident that" },
+    { weak: /\bI am good at\b/gi, strong: "I excel at" },
+    { weak: /\bI have experience\b/gi, strong: "I bring deep expertise in" },
+    { weak: /\bI want to\b/gi, strong: "I am eager to" },
+    { weak: /\bI am interested\b/gi, strong: "I am driven to contribute to" },
+    { weak: /\bI will try\b/gi, strong: "I will deliver" },
+    { weak: /\bI did\b/gi, strong: "I spearheaded" },
+    { weak: /\bI helped\b/gi, strong: "I led" },
+    { weak: /\bsome projects\b/gi, strong: "significant initiatives" },
+    { weak: /\bhard worker\b/gi, strong: "committed professional" },
+    { weak: /\bquick learner\b/gi, strong: "rapidly adaptable expert" },
+    { weak: /\bpretty good\b/gi, strong: "excellent" },
+    { weak: /\bcool\b/gi, strong: "innovative" }
+  ];
+
+  let count = 0;
+  weakToStrong.forEach(pair => {
+    if (pair.weak.test(text)) {
+      text = text.replace(pair.weak, pair.strong);
+      count++;
+    }
+  });
+
+  if (count > 0) {
+    preview.innerText = text;
+    updateOnFormChange();
+    showToast(`✨ ${count} mejora${count > 1 ? 's' : ''} aplicadas`);
+  } else {
+    showToast("✅ Tu texto ya está optimizado");
+  }
+}
+
+function showATSGuide() {
+  const modal = document.createElement("div");
+  modal.className = "modal show";
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width: 700px;">
+      <h2>🤖 Optimización ATS (Applicant Tracking System)</h2>
+      
+      <div style="background: var(--soft); padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 12px;">
+        <p><strong>💡 Tip:</strong> Los ATS son sistemas que filtran cartas antes de que las vea un humano. Sigue estos tips para pasar el filtro.</p>
+      </div>
+
+      <div style="margin-bottom: 12px; border-bottom: 1px solid var(--uiline); padding-bottom: 12px;">
+        <h4>✅ HABILITA</h4>
+        <ul style="margin-left: 16px; color: var(--muted); font-size: 12px;">
+          <li>Palabras clave del job description (copia directamente)</li>
+          <li>Números y métricas ($, %, años, resultados cuantitativos)</li>
+          <li>Nombre de empresa y rol exactamente</li>
+          <li>Formato: párrafos claros, sin columnas</li>
+          <li>Fuentes estándar: Arial, Times, Calibri</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 12px; border-bottom: 1px solid var(--uiline); padding-bottom: 12px;">
+        <h4>❌ EVITA</h4>
+        <ul style="margin-left: 16px; color: var(--muted); font-size: 12px;">
+          <li>Tablas, imágenes, gráficos</li>
+          <li>Colores especiales o fondos</li>
+          <li>Símbolos raros (●, ★, ◆)</li>
+          <li>Formato PDF si piden Word</li>
+          <li>Nombres de archivo complejos</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--uipanel); padding: 10px; border-radius: 6px; font-size: 11px; color: var(--muted);">
+        <strong>Recuerda:</strong> Las palabras clave son críticas. Si el job description dice "Python" y "AWS", úsalas en tu carta.
+      </div>
+
+      <button class="btn btn-ghost" onclick="this.closest('.modal').remove()" style="width: 100%; margin-top: 16px;">Entendido</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
 }
 
 function showExamples() {
