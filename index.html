@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cover Letter Master — Professional Letter Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #1f4d3f;
+  --accent2: #a8843a;
+  --ink: #16181d;
+  --muted: #6b6f76;
+  --line: #e4e0d8;
+  --soft: #e8efe9;
+  --paper: #fff;
+  --uipanel: #fafaf8;
+  --uiline: #ddd8ce;
+  --body: 'Inter', sans-serif;
+  --display: 'Fraunces', serif;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 12px 32px rgba(20,24,29,.07);
+}
+
+[data-theme="dark"] {
+  --ink: #f5f3f0;
+  --paper: #1a1a1a;
+  --uipanel: #222;
+  --uiline: #333;
+  --muted: #999;
+  --line: #333;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--body);
+  background: #f5f3f0;
+  color: var(--ink);
+  display: flex;
+}
+
+#container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+aside {
+  width: 380px;
+  background: var(--paper);
+  border-right: 1px solid var(--uiline);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f5f3f0;
+}
+
+.panel-top {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--uiline);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--accent);
+}
+
+.version-tag {
+  font-size: 9px;
+  color: #6b6f76;
+  background: var(--line);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.theme-toggle {
+  background: var(--soft);
+  border: none;
+  color: var(--accent);
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: .15s;
+}
+
+.theme-toggle:hover {
+  background: var(--uiline);
+}
+
+.sect {
+  padding: 18px 16px;
+  border-top: 1px solid var(--uiline);
+}
+
+.sect:first-of-type {
+  border: none;
+  padding-top: 12px;
+}
+
+.group {
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--uiline);
+}
+
+.group:last-child {
+  border: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.group h3 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid var(--uiline);
+  background: var(--paper);
+  border-radius: 7px;
+  padding: 9px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--ink);
+  transition: .15s;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--soft);
+}
+
+.field textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.selector-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.selector-row .field {
+  margin-bottom: 0;
+}
+
+.actions {
+  position: sticky;
+  bottom: -24px;
+  background: linear-gradient(transparent, var(--uipanel) 22%);
+  padding: 20px 0 4px;
+  margin-top: 22px;
+  display: grid;
+  gap: 8px;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #163b30;
+}
+
+.btn-primary.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.btn-ghost {
+  background: var(--paper);
+  border: 1px solid var(--uiline);
+  color: var(--ink);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.stage {
+  padding: 28px 32px;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.score-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--paper);
+  border: 1px solid var(--uiline);
+  border-radius: 11px;
+  padding: 8px 15px;
+  box-shadow: var(--shadow);
+}
+
+.score-ring {
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+
+.score-ring svg {
+  transform: rotate(-90deg);
+}
+
+.score-ring .val {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.score-chip .lab {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.score-chip .lab b {
+  display: block;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
+  max-width: 1200px;
+}
+
+.preview-area {
+  background: var(--paper);
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: var(--shadow);
+  min-height: 500px;
+  line-height: 1.6;
+}
+
+.preview-area h1 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.preview-area .date {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.preview-area .greeting {
+  margin-bottom: 12px;
+}
+
+.preview-area .body {
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.preview-area .closing {
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.preview-area .signature {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  font-size: 12px;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--uiline);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  font-size: 12px;
+}
+
+.card h4 {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.card li {
+  padding: 4px 0;
+  color: var(--muted);
+}
+
+.card li strong {
+  color: var(--ink);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.metrics {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.metrics span {
+  display: flex;
+  gap: 4px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  font-size: 12px;
+  animation: slideIn .3s ease;
+  z-index: 1000;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--paper);
+  border-radius: 14px;
+  padding: 28px;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+
+.modal-content h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.modal-content p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--uiline);
+}
+
+.checklist-item:last-child {
+  border: none;
+}
+
+.checklist-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checklist-item label {
+  cursor: pointer;
+  flex: 1;
+  font-size: 13px;
+}
+
+@media (max-width: 1024px) {
+  aside {
+    width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  aside {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--uiline);
+    max-height: 40vh;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .stage {
+    padding: 20px;
+  }
+
+  .preview-area {
+    min-height: 300px;
+    padding: 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+  <aside>
+    <div class="panel-top">
+      <div class="logo">📄 Cover Letter Master</div>
+      <button class="theme-toggle" onclick="toggleDarkMode()">🌙</button>
+    </div>
+
+    <div class="sect">
+      <div class="group" style="border-top:none;margin-top:0;padding-top:0">
+        <h3>01 Información Personal</h3>
+        <div class="field">
+          <label>Tu nombre completo</label>
+          <input type="text" id="f_name" placeholder="Juan García" oninput="updateOnFormChange()">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="f_email" placeholder="juan@example.com" oninput="updateOnFormChange()">
+        </div>
+        <div class="field">
+          <label>Teléfono</label>
+          <input type="tel" id="f_phone" placeholder="+34 XXX XXX XXX" oninput="updateOnFormChange()">
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="group" style="border-top:none;margin-top:0;padding-top:0">
+        <h3>02 Empresa & Posición</h3>
+        <div class="field">
+          <label>Nombre de la empresa</label>
+          <input type="text" id="f_company" placeholder="Google, Microsoft, etc." oninput="updateOnFormChange()">
+        </div>
+        <div class="field">
+          <label>Puesto al que aplicas</label>
+          <input type="text" id="f_position" placeholder="Product Manager, Senior Developer" oninput="updateOnFormChange()">
+        </div>
+        <div class="field">
+          <label>Industria/Tipo</label>
+          <select id="f_template" onchange="updateOnFormChange()">
+            <option value="finance">💰 Finance</option>
+            <option value="tech">💻 Tech</option>
+            <option value="creative">🎨 Creative</option>
+            <option value="sales">📈 Sales</option>
+            <option value="healthcare">🏥 Healthcare</option>
+            <option value="executive">👔 Executive</option>
+            <option value="hr">👥 HR/Admin</option>
+            <option value="education">🎓 Education</option>
+            <option value="logistics">📦 Logistics</option>
+            <option value="entry">🚀 Entry-level</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="group" style="border-top:none;margin-top:0;padding-top:0">
+        <h3>03 Competencias</h3>
+        <div class="field">
+          <label>Habilidades clave (separadas por comas)</label>
+          <textarea id="f_skills" placeholder="Leadership, Project Management, Data Analysis" oninput="updateOnFormChange()"></textarea>
+        </div>
+        <div class="field">
+          <label>Logros/Métricas específicas</label>
+          <textarea id="f_achievements" placeholder="Aumenté ventas 40%, Reduje costos 20%" oninput="updateOnFormChange()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="group" style="border-top:none;margin-top:0;padding-top:0">
+        <h3>04 Tono & Estilo</h3>
+        <div class="field">
+          <label>Tono de la carta</label>
+          <select id="f_tone" onchange="updateOnFormChange()">
+            <option value="formal">Formal & Profesional</option>
+            <option value="casual">Casual & Amigable</option>
+            <option value="enthusiastic">Entusiasta & Apasionado</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Idioma</label>
+          <select id="f_language" onchange="setLanguage(this.value)">
+            <option value="es">🇪🇸 Español</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="pt">🇵🇹 Português</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="it">🇮🇹 Italiano</option>
+            <option value="de">🇩🇪 Deutsch</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="exportPDF()" title="Descargar PDF">⤓ PDF</button>
+        <button class="btn btn-primary" onclick="exportWord()" title="Descargar Word">⤓ Word</button>
+        <button class="btn btn-ghost" onclick="copyToClipboard()" title="Copiar al portapapeles">📋</button>
+      </div>
+      <button class="btn btn-ghost" onclick="showChecklist()" title="Revisar antes de enviar">✅ Checklist</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="stage">
+      <div class="topbar">
+        <div class="score-chip">
+          <div class="score-ring">
+            <svg width="44" height="44">
+              <circle cx="22" cy="22" r="18" fill="none" stroke="#e4e0d8" stroke-width="5"/>
+              <circle id="ring_fg" cx="22" cy="22" r="18" fill="none" stroke="#1f4d3f" stroke-width="5" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="20"/>
+            </svg>
+            <span class="val" id="score_val">—</span>
+          </div>
+          <div class="lab"><span>Calidad</span><b id="score_label">Calculando…</b></div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <div class="preview-area" id="preview"></div>
+        <div class="side-panel">
+          <div class="card">
+            <h4>📊 Métricas</h4>
+            <div class="metrics">
+              <span>📝 <span id="wordcount">0</span> palabras</span>
+              <span>⏱️ <span id="readtime">0</span> min</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>💡 Sugerencias</h4>
+            <ul id="suggestions_list">
+              <li>Completa los campos para ver sugerencias</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h4>✨ Pro Tips</h4>
+            <ul id="tips_list">
+              <li>Personaliza la carta para cada empresa</li>
+              <li>Incluye logros con números</li>
+            </ul>
+          </div>
+
+          <button class="btn btn-ghost" onclick="showExamples()" style="width:100%">📚 Ver ejemplos</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="checklist_modal">
+  <div class="modal-content">
+    <h2>✅ Checklist Pre-envío</h2>
+    <p>Revisa estos puntos antes de descargar tu carta:</p>
+    <div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check1">
+        <label for="check1">¿Personalizaste la carta para esta empresa?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check2">
+        <label for="check2">¿Incluiste al menos un logro específico?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check3">
+        <label for="check3">¿Revisaste la ortografía y gramática?</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check4">
+        <label for="check4">¿La puntuación de calidad es ≥ 70?</label>
+      </div>
+    </div>
+    <div class="actions" style="margin-top:20px;position:static;background:none;padding:0">
+      <button class="btn btn-primary" onclick="closeChecklist()" style="width:100%">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.min.js"></script>
+
+<script>
+// ============= GLOBAL STATE =============
+let formData = {
+  name: "",
+  email: "",
+  phone: "",
+  company: "",
+  position: "",
+  skills: "",
+  achievements: "",
+  tone: "formal"
+};
+
+let currentLang = "es";
+let currentTemplate = "finance";
+let currentScore = 0;
+
+// ============= TEMPLATES =============
+const templates = {
+  finance: {
+    es: {
+      name: "Finance",
+      opening: "Estimado/a {{company}},",
+      body: "Me dirijo a usted para expresar mi interés en la posición de {{position}} en {{company}}. Con mi experiencia en {{skills}}, estoy seguro/a de poder contribuir significativamente a su equipo. {{achievements}}",
+      closing: "Quedo atento/a a cualquier duda y agradezco de antemano su consideración.",
+      signature: "Cordialmente,\n{{name}}"
+    },
+    en: {
+      opening: "Dear {{company}} Hiring Team,",
+      body: "I am writing to express my strong interest in the {{position}} role at {{company}}. With my expertise in {{skills}}, I am confident I can make a significant contribution to your team. {{achievements}}",
+      closing: "Thank you for considering my application. I look forward to discussing how I can add value.",
+      signature: "Sincerely,\n{{name}}"
+    },
+    pt: {
+      opening: "Prezado(a) {{company}},",
+      body: "Dirijo-me a você para expressar meu interesse na posição de {{position}} em {{company}}. Com minha experiência em {{skills}}, tenho certeza de que poderei contribuir significativamente para sua equipe. {{achievements}}",
+      closing: "Fico no aguardo de suas dúvidas e agradeço antecipadamente pela consideração.",
+      signature: "Atenciosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Madame, Monsieur,",
+      body: "Je vous écris pour exprimer mon vif intérêt pour le poste de {{position}} chez {{company}}. Forte de mon expérience en {{skills}}, je suis persuadé(e) de pouvoir contribuer significativement à votre équipe. {{achievements}}",
+      closing: "Je reste à votre disposition et vous remercie d'avance de votre considération.",
+      signature: "Cordialement,\n{{name}}"
+    },
+    it: {
+      opening: "Spett.le {{company}},",
+      body: "Le scrivo per esprimere il mio vivo interesse per la posizione di {{position}} presso {{company}}. Con la mia esperienza in {{skills}}, sono certo/a di poter contribuire significativamente al vostro team. {{achievements}}",
+      closing: "Rimango a disposizione per chiarimenti e la ringrazio anticipatamente.",
+      signature: "Cordiali saluti,\n{{name}}"
+    },
+    de: {
+      opening: "Sehr geehrte Damen und Herren,",
+      body: "ich schreibe Ihnen, um mein großes Interesse an der Position {{position}} bei {{company}} auszudrücken. Mit meiner Erfahrung in {{skills}} bin ich überzeugt, dass ich Ihrem Team einen wesentlichen Beitrag leisten kann. {{achievements}}",
+      closing: "Ich freue mich auf Ihre Rückmeldung und danke Ihnen im Voraus für Ihre Berücksichtigung.",
+      signature: "Mit freundlichen Grüßen,\n{{name}}"
+    }
+  },
+  tech: {
+    es: {
+      opening: "Estimado/a equipo de {{company}},",
+      body: "Me dirijo a usted para solicitar la posición de {{position}} en {{company}}. Como desarrollador/a con experiencia en {{skills}}, he impactado positivamente en proyectos anteriores. {{achievements}} Estoy entusiasmado/a por aportar mis conocimientos.",
+      closing: "Quedo disponible para cualquier pregunta adicional.",
+      signature: "Saludos cordiales,\n{{name}}"
+    },
+    en: {
+      opening: "Hello {{company}} Team,",
+      body: "I am excited to apply for the {{position}} position at {{company}}. With my technical background in {{skills}}, I have consistently delivered impactful results. {{achievements}} I would be thrilled to contribute to your innovative projects.",
+      closing: "I'd be happy to discuss my qualifications further at your convenience.",
+      signature: "Best regards,\n{{name}}"
+    },
+    pt: {
+      opening: "Prezados Senhores da {{company}},",
+      body: "Venho por este meio candidatar-me à posição de {{position}} na {{company}}. Como profissional com experiência em {{skills}}, desenvolvi soluções que geraram impacto. {{achievements}} Estou animado/a para contribuir com meus conhecimentos.",
+      closing: "Fico à disposição para esclarecimentos.",
+      signature: "Atenciosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Bonjour l'équipe {{company}},",
+      body: "Je suis ravi(e) de candidater pour le poste de {{position}} chez {{company}}. Avec mon expérience en {{skills}}, j'ai constamment livré des résultats impactants. {{achievements}} Je serais enthousiaste de contribuer à vos projets innovants.",
+      closing: "Je serais heureux/se de discuter plus avant de mes qualifications.",
+      signature: "Cordialement,\n{{name}}"
+    },
+    it: {
+      opening: "Salve a {{company}},",
+      body: "Scrivo per candidarmi alla posizione di {{position}} presso {{company}}. Con la mia esperienza in {{skills}}, ho costantemente consegnato risultati di impatto. {{achievements}} Sarei entusiasta di contribuire ai vostri progetti innovativi.",
+      closing: "Rimango disponibile per discussioni ulteriori.",
+      signature: "Cordiali saluti,\n{{name}}"
+    },
+    de: {
+      opening: "Hallo {{company}} Team,",
+      body: "Ich freue mich, mich auf die Position {{position}} bei {{company}} zu bewerben. Mit meinem technischen Hintergrund in {{skills}} habe ich kontinuierlich wirkungsvolle Ergebnisse geliefert. {{achievements}} Ich würde mich freuen, zu Ihren innovativen Projekten beizutragen.",
+      closing: "Ich stehe gerne für weitere Diskussionen zur Verfügung.",
+      signature: "Mit freundlichen Grüßen,\n{{name}}"
+    }
+  },
+  creative: {
+    es: {
+      opening: "Hola equipo creativo de {{company}},",
+      body: "Soy {{name}}, y estoy emocionado/a de aplicar para {{position}} en {{company}}. Mi pasión por {{skills}} se refleja en mis trabajos anteriores. {{achievements}} Me encantaría aportar mi creatividad a tu equipo.",
+      closing: "¡Espero poder colaborar contigo pronto!",
+      signature: "Con entusiasmo,\n{{name}}"
+    },
+    en: {
+      opening: "Hello {{company}} Creative Team,",
+      body: "I'm {{name}}, and I'm thrilled to apply for {{position}} at {{company}}. My passion for {{skills}} shines through in my portfolio work. {{achievements}} I'd love to bring my creative energy to your team.",
+      closing: "I can't wait to collaborate with you!",
+      signature: "Enthusiastically,\n{{name}}"
+    },
+    pt: {
+      opening: "Olá equipe criativa de {{company}},",
+      body: "Sou {{name}}, e estou entusiasmado/a para candidatar-me a {{position}} na {{company}}. Minha paixão por {{skills}} brilha em meus trabalhos anteriores. {{achievements}} Adoraria trazer minha criatividade para sua equipe.",
+      closing: "Mal posso esperar para colaborar!",
+      signature: "Com entusiasmo,\n{{name}}"
+    },
+    fr: {
+      opening: "Bonjour l'équipe créative {{company}},",
+      body: "Je suis {{name}}, et je suis ravi(e) de candidater pour {{position}} chez {{company}}. Ma passion pour {{skills}} brille à travers mes travaux antérieurs. {{achievements}} J'aimerais apporter ma créativité à votre équipe.",
+      closing: "J'ai hâte de collaborer avec vous!",
+      signature: "Avec enthousiasme,\n{{name}}"
+    },
+    it: {
+      opening: "Ciao team creativo di {{company}},",
+      body: "Sono {{name}}, e sono entusiasta di candidarmi a {{position}} presso {{company}}. La mia passione per {{skills}} brilla nei miei lavori precedenti. {{achievements}} Mi piacerebbe portare la mia creatività al vostro team.",
+      closing: "Non vedo l'ora di collaborare!",
+      signature: "Con entusiasmo,\n{{name}}"
+    },
+    de: {
+      opening: "Hallo kreatives Team von {{company}},",
+      body: "Ich bin {{name}}, und ich freue mich, mich auf die Position {{position}} bei {{company}} zu bewerben. Meine Leidenschaft für {{skills}} scheint in meinen bisherigen Arbeiten durch. {{achievements}} Ich würde meine kreative Energie gerne in Ihr Team einbringen.",
+      closing: "Ich freue mich auf die Zusammenarbeit!",
+      signature: "Mit Begeisterung,\n{{name}}"
+    }
+  },
+  sales: {
+    es: {
+      opening: "Buenos días equipo de ventas de {{company}},",
+      body: "Soy {{name}}, un/a profesional de ventas apasionado/a, y quisiera aplicar para {{position}} en {{company}}. Mi experiencia en {{skills}} ha generado resultados medibles. {{achievements}} Estoy listo/a para impulsar el crecimiento de tu empresa.",
+      closing: "Espero poder discutir cómo puedo contribuir al éxito de {{company}}.",
+      signature: "Saludos,\n{{name}}"
+    },
+    en: {
+      opening: "Good morning {{company}} Sales Team,",
+      body: "I'm {{name}}, a results-driven sales professional, and I'd like to apply for {{position}} at {{company}}. My expertise in {{skills}} has consistently delivered measurable results. {{achievements}} I'm ready to drive growth for your organization.",
+      closing: "I'd love to discuss how I can contribute to {{company}}'s success.",
+      signature: "Best regards,\n{{name}}"
+    },
+    pt: {
+      opening: "Bom dia, equipe de vendas {{company}},",
+      body: "Sou {{name}}, um/a profissional de vendas orientado/a para resultados, e gostaria de candidatar-me a {{position}} na {{company}}. Minha experiência em {{skills}} gerou consistentemente resultados mensuráveis. {{achievements}} Estou pronto/a para impulsionar o crescimento de sua organização.",
+      closing: "Gostaria de discutir como posso contribuir para o sucesso da {{company}}.",
+      signature: "Atenciosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Bonjour l'équipe commerciale {{company}},",
+      body: "Je suis {{name}}, un/e professionnel(le) des ventes orienté(e) vers les résultats, et je voudrais candidater pour {{position}} chez {{company}}. Mon expertise en {{skills}} a constamment livré des résultats mesurables. {{achievements}} Je suis prêt(e) à stimuler la croissance de votre organisation.",
+      closing: "J'aimerais discuter de comment je peux contribuer au succès de {{company}}.",
+      signature: "Cordialement,\n{{name}}"
+    },
+    it: {
+      opening: "Buongiorno team vendite {{company}},",
+      body: "Sono {{name}}, un professionista commerciale orientato ai risultati, e vorrei candidarmi a {{position}} presso {{company}}. La mia esperienza in {{skills}} ha costantemente prodotto risultati misurabili. {{achievements}} Sono pronto a guidare la crescita della vostra organizzazione.",
+      closing: "Mi piacerebbe discutere di come posso contribuire al successo di {{company}}.",
+      signature: "Cordiali saluti,\n{{name}}"
+    },
+    de: {
+      opening: "Guten Morgen {{company}} Verkaufsteam,",
+      body: "Ich bin {{name}}, ein ergebnisorientierter Vertriebsfachmann, und ich möchte mich auf die Position {{position}} bei {{company}} bewerben. Meine Expertise in {{skills}} hat konsequent messbare Ergebnisse geliefert. {{achievements}} Ich bin bereit, das Wachstum Ihrer Organisation voranzutreiben.",
+      closing: "Ich würde gerne besprechen, wie ich zum Erfolg von {{company}} beitragen kann.",
+      signature: "Mit freundlichen Grüßen,\n{{name}}"
+    }
+  },
+  healthcare: {
+    es: {
+      opening: "Estimado/a director/a de {{company}},",
+      body: "Como profesional dedicado/a en el sector de la salud, solicito consideración para la posición de {{position}} en {{company}}. Mi preparación en {{skills}} me permite proporcionar servicios de calidad. {{achievements}} Comprometerme a la excelencia en el cuidado del paciente.",
+      closing: "Agradezco su atención y espero poder contribuir a {{company}}.",
+      signature: "Respetuosamente,\n{{name}}"
+    },
+    en: {
+      opening: "Dear {{company}} Hiring Manager,",
+      body: "As a dedicated healthcare professional, I am interested in the {{position}} position at {{company}}. My training in {{skills}} enables me to provide quality care consistently. {{achievements}} I am committed to excellence in patient care and outcomes.",
+      closing: "Thank you for your consideration. I look forward to contributing to {{company}}'s mission.",
+      signature: "Respectfully,\n{{name}}"
+    },
+    pt: {
+      opening: "Prezado/a {{company}},",
+      body: "Como profissional dedicado/a da saúde, solicito consideração para a posição de {{position}} em {{company}}. Minha formação em {{skills}} me permite fornecer atendimento de qualidade. {{achievements}} Comprometo-me com a excelência no cuidado do paciente.",
+      closing: "Agradeço sua atenção e espero poder contribuir.",
+      signature: "Respeitosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Chère {{company}},",
+      body: "En tant que professionnel(le) de santé dédié(e), je suis intéressé(e) par le poste de {{position}} à {{company}}. Ma formation en {{skills}} me permet de fournir des soins de qualité. {{achievements}} Je m'engage à l'excellence dans les soins aux patients.",
+      closing: "Merci de votre considération. J'attends avec impatience de contribuer à la mission de {{company}}.",
+      signature: "Respectueusement,\n{{name}}"
+    },
+    it: {
+      opening: "Caro/a {{company}},",
+      body: "Come professionista sanitario dedicato/a, sono interessato/a alla posizione di {{position}} presso {{company}}. La mia formazione in {{skills}} mi consente di fornire un'assistenza di qualità. {{achievements}} Mi impegno per l'eccellenza nell'assistenza ai pazienti.",
+      closing: "Grazie per la vostra considerazione. Non vedo l'ora di contribuire.",
+      signature: "Rispettosamente,\n{{name}}"
+    },
+    de: {
+      opening: "Liebe {{company}},",
+      body: "Als engagierter Gesundheitsberuf bin ich an der Position {{position}} bei {{company}} interessiert. Meine Schulung in {{skills}} ermöglicht mir, konsequent hochwertige Pflege zu leisten. {{achievements}} Ich verpflichte mich zur Exzellenz in der Patientenversorgung.",
+      closing: "Vielen Dank für Ihre Berücksichtigung. Ich freue mich auf meinen Beitrag.",
+      signature: "Mit Respekt,\n{{name}}"
+    }
+  },
+  executive: {
+    es: {
+      opening: "Estimado/a {{company}} C-Suite,",
+      body: "Como ejecutivo/a con amplia experiencia en {{skills}}, estoy interesado/a en la posición de {{position}}. Mis logros demuestran mi capacidad para liderar y generar valor: {{achievements}}. Estoy convencido/a de que puedo impulsar resultados significativos.",
+      closing: "Me encantaría conversar sobre cómo puedo contribuir a la visión estratégica de {{company}}.",
+      signature: "Atentamente,\n{{name}}"
+    },
+    en: {
+      opening: "Dear {{company}} Leadership,",
+      body: "As an accomplished executive with extensive expertise in {{skills}}, I am interested in the {{position}} role. My track record demonstrates my ability to lead and create value: {{achievements}}. I am confident in driving significant results for {{company}}.",
+      closing: "I would welcome the opportunity to discuss how I can contribute to {{company}}'s strategic vision.",
+      signature: "Sincerely,\n{{name}}"
+    },
+    pt: {
+      opening: "Prezados líderes de {{company}},",
+      body: "Como executivo/a experiente com vasto conhecimento em {{skills}}, tenho interesse na posição de {{position}}. Meu histórico demonstra minha capacidade de liderança: {{achievements}}. Estou confiante em gerar resultados significativos.",
+      closing: "Gostaria de conversar sobre como posso contribuir para a visão estratégica de {{company}}.",
+      signature: "Atenciosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Cher {{company}} Exécutif,",
+      body: "En tant qu'cadre expérimenté avec une expertise approfondie en {{skills}}, je suis intéressé(e) par le poste de {{position}}. Mon bilan démontre ma capacité à diriger et créer de la valeur: {{achievements}}. Je suis confiant(e) de générer des résultats significatifs.",
+      closing: "Je serais heureux(se) de discuter de comment je peux contribuer à la vision stratégique de {{company}}.",
+      signature: "Sincèrement,\n{{name}}"
+    },
+    it: {
+      opening: "Caro {{company}} Esecutivo,",
+      body: "In qualità di dirigente esperto con vasta competenza in {{skills}}, sono interessato/a alla posizione di {{position}}. Il mio track record dimostra la mia capacità di leadership: {{achievements}}. Sono sicuro/a di poter generare risultati significativi.",
+      closing: "Sarei felice di discussione su come posso contribuire alla visione strategica di {{company}}.",
+      signature: "Sinceramente,\n{{name}}"
+    },
+    de: {
+      opening: "Liebe {{company}} Führungskraft,",
+      body: "Als erfahrener Führungskraft mit umfassender Expertise in {{skills}} bin ich an der Position {{position}} interessiert. Mein Track Record zeigt meine Führungsfähigkeit: {{achievements}}. Ich bin überzeugt, signifikante Ergebnisse für {{company}} zu erzielen.",
+      closing: "Ich würde mich freuen, zu besprechen, wie ich zur strategischen Vision von {{company}} beitragen kann.",
+      signature: "Aufrichtig,\n{{name}}"
+    }
+  },
+  hr: {
+    es: {
+      opening: "Estimado/a equipo de {{company}},",
+      body: "Solicito la posición de {{position}} en {{company}} con mi experiencia probada en {{skills}}. He implementado iniciativas que mejoraron la cultura organizacional: {{achievements}}. Estoy comprometido/a con crear un ambiente de trabajo positivo.",
+      closing: "Quedo a su disposición para discutir cómo puedo contribuir.",
+      signature: "Cordialmente,\n{{name}}"
+    },
+    en: {
+      opening: "Dear {{company}} Team,",
+      body: "I am applying for the {{position}} role with proven expertise in {{skills}}. I have successfully implemented initiatives that enhanced organizational culture: {{achievements}}. I am committed to fostering a positive workplace.",
+      closing: "I'm happy to discuss how I can contribute to {{company}}'s HR success.",
+      signature: "Best regards,\n{{name}}"
+    },
+    pt: {
+      opening: "Prezados {{company}},",
+      body: "Solicito a posição de {{position}} com experiência comprovada em {{skills}}. Implementei iniciativas que melhoraram a cultura organizacional: {{achievements}}. Estou comprometido/a em criar um ambiente de trabalho positivo.",
+      closing: "Fico à disposição para discutir minha contribuição.",
+      signature: "Atenciosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Chère {{company}},",
+      body: "Je demande le poste de {{position}} avec une expérience avérée en {{skills}}. J'ai mis en œuvre des initiatives qui ont amélioré la culture organisationnelle: {{achievements}}. Je m'engage à favoriser un environnement de travail positif.",
+      closing: "Je suis heureux de discuter comment je peux contribuer au succès RH de {{company}}.",
+      signature: "Cordialement,\n{{name}}"
+    },
+    it: {
+      opening: "Caro {{company}},",
+      body: "Richiedo la posizione di {{position}} con esperienza provata in {{skills}}. Ho implementato iniziative che hanno migliorato la cultura organizzativa: {{achievements}}. Sono impegnato/a a creare un ambiente di lavoro positivo.",
+      closing: "Sono felice di discutere come posso contribuire al successo HR di {{company}}.",
+      signature: "Cordiali saluti,\n{{name}}"
+    },
+    de: {
+      opening: "Liebe {{company}},",
+      body: "Ich bewerbe mich auf die Position {{position}} mit bewährter Expertise in {{skills}}. Ich habe Initiativen implementiert, die die Organisationskultur verbessert haben: {{achievements}}. Ich verpflichte mich, ein positives Arbeitsumfeld zu schaffen.",
+      closing: "Ich freue mich, zu besprechen, wie ich zum HR-Erfolg von {{company}} beitragen kann.",
+      signature: "Mit freundlichen Grüßen,\n{{name}}"
+    }
+  },
+  education: {
+    es: {
+      opening: "Estimado/a director/a de educación de {{company}},",
+      body: "Como educador/a apasionado/a, solicito la posición de {{position}} en {{company}}. Mi experiencia en {{skills}} ha impactado positivamente en estudiantes: {{achievements}}. Estoy dedicado/a a fomentar el aprendizaje significativo.",
+      closing: "Espero poder contribuir a la misión educativa de {{company}}.",
+      signature: "Respetuosamente,\n{{name}}"
+    },
+    en: {
+      opening: "Dear {{company}} Education Director,",
+      body: "As a passionate educator, I am applying for {{position}} at {{company}}. My experience in {{skills}} has positively impacted students: {{achievements}}. I am dedicated to fostering meaningful learning.",
+      closing: "I look forward to contributing to {{company}}'s educational mission.",
+      signature: "Respectfully,\n{{name}}"
+    },
+    pt: {
+      opening: "Prezado/a diretor/a de educação {{company}},",
+      body: "Como educador/a apaixonado/a, solicito a posição de {{position}} em {{company}}. Minha experiência em {{skills}} impactou positivamente nos estudantes: {{achievements}}. Estou dedicado/a a promover aprendizado significativo.",
+      closing: "Espero poder contribuir para a missão educacional de {{company}}.",
+      signature: "Respeitosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Cher Directeur d'Éducation {{company}},",
+      body: "En tant qu'éducateur passionné, je demande le poste de {{position}} à {{company}}. Mon expérience en {{skills}} a impacté positivement les étudiants: {{achievements}}. Je suis dédié à promouvoir un apprentissage significatif.",
+      closing: "J'attends avec impatience de contribuer à la mission éducative de {{company}}.",
+      signature: "Respectueusement,\n{{name}}"
+    },
+    it: {
+      opening: "Caro Direttore Educazione {{company}},",
+      body: "Come educatore appassionato, chiedo la posizione di {{position}} presso {{company}}. La mia esperienza in {{skills}} ha impattato positivamente gli studenti: {{achievements}}. Sono dedicato/a a promuovere un apprendimento significativo.",
+      closing: "Non vedo l'ora di contribuire alla missione educativa di {{company}}.",
+      signature: "Rispettosamente,\n{{name}}"
+    },
+    de: {
+      opening: "Lieber Bildungsdirektor {{company}},",
+      body: "Als leidenschaftlicher Pädagoge bewerbe ich mich auf die Position {{position}} bei {{company}}. Meine Erfahrung in {{skills}} hat Schüler positiv beeinflusst: {{achievements}}. Ich widme mich der Förderung bedeutsamen Lernens.",
+      closing: "Ich freue mich darauf, zum Bildungsauftrag von {{company}} beizutragen.",
+      signature: "Mit Respekt,\n{{name}}"
+    }
+  },
+  logistics: {
+    es: {
+      opening: "Estimado/a {{company}} Logistics,",
+      body: "Como profesional de logística experimentado/a, solicito {{position}} en {{company}}. Mi destreza en {{skills}} ha optimizado operaciones: {{achievements}}. Estoy listo/a para mejorar eficiencia.",
+      closing: "Quedo disponible para discutir mi experiencia.",
+      signature: "Saludos,\n{{name}}"
+    },
+    en: {
+      opening: "Dear {{company}} Logistics Team,",
+      body: "As an experienced logistics professional, I am applying for {{position}} at {{company}}. My expertise in {{skills}} has optimized operations: {{achievements}}. I'm ready to enhance efficiency and reduce costs.",
+      closing: "I'd be happy to discuss how I can contribute.",
+      signature: "Best regards,\n{{name}}"
+    },
+    pt: {
+      opening: "Prezados {{company}} Logística,",
+      body: "Como profissional de logística experiente, solicito {{position}} em {{company}}. Minha expertise em {{skills}} otimizou operações: {{achievements}}. Estou pronto para melhorar eficiência.",
+      closing: "Fico disponível para discussão.",
+      signature: "Atenciosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Cher {{company}} Logistique,",
+      body: "En tant que professionnel logistique expérimenté, je demande {{position}} chez {{company}}. Mon expertise en {{skills}} a optimisé les opérations: {{achievements}}. Je suis prêt à améliorer l'efficacité.",
+      closing: "Je suis disponible pour discuter.",
+      signature: "Cordialement,\n{{name}}"
+    },
+    it: {
+      opening: "Caro {{company}} Logistica,",
+      body: "Come professionista logistico esperto, chiedo {{position}} presso {{company}}. La mia expertise in {{skills}} ha ottimizzato le operazioni: {{achievements}}. Sono pronto a migliorare l'efficienza.",
+      closing: "Rimango disponibile per discutere.",
+      signature: "Cordiali saluti,\n{{name}}"
+    },
+    de: {
+      opening: "Liebe {{company}} Logistik,",
+      body: "Als erfahrener Logistikfachmann bewerbe ich mich auf {{position}} bei {{company}}. Meine Expertise in {{skills}} hat Operationen optimiert: {{achievements}}. Ich bin bereit, die Effizienz zu verbessern.",
+      closing: "Ich bin verfügbar für Diskussionen.",
+      signature: "Mit freundlichen Grüßen,\n{{name}}"
+    }
+  },
+  entry: {
+    es: {
+      opening: "Estimado/a {{company}},",
+      body: "Soy un/a profesional joven entusiasmado/a por iniciar mi carrera en {{position}} en {{company}}. Aunque soy nuevo/a en el sector, poseo {{skills}} y gran motivación. {{achievements}} Estoy listo/a para aprender y crecer con su equipo.",
+      closing: "Agradezco la oportunidad de considerar mi candidatura.",
+      signature: "Cordialmente,\n{{name}}"
+    },
+    en: {
+      opening: "Dear {{company}} Team,",
+      body: "I am an enthusiastic early-career professional eager to start my journey in {{position}} at {{company}}. Though new to the industry, I bring {{skills}} and strong motivation. {{achievements}} I'm ready to learn and grow with your team.",
+      closing: "Thank you for considering my application.",
+      signature: "Best regards,\n{{name}}"
+    },
+    pt: {
+      opening: "Prezados {{company}},",
+      body: "Sou um profissional entusiasmado no início da carreira, ansioso por iniciar em {{position}} em {{company}}. Embora novo na área, trago {{skills}} e grande motivação. {{achievements}} Estou pronto para aprender e crescer com seu time.",
+      closing: "Agradeço a oportunidade de considerar minha candidatura.",
+      signature: "Atenciosamente,\n{{name}}"
+    },
+    fr: {
+      opening: "Chère {{company}},",
+      body: "Je suis un jeune professionnel enthousiaste désireux de débuter ma carrière en {{position}} chez {{company}}. Bien que nouveau dans le secteur, j'apporte {{skills}} et une grande motivation. {{achievements}} Je suis prêt à apprendre et grandir avec votre équipe.",
+      closing: "Merci de considérer ma candidature.",
+      signature: "Cordialement,\n{{name}}"
+    },
+    it: {
+      opening: "Caro {{company}},",
+      body: "Sono un giovane professionista entusiasta desideroso di iniziare la mia carriera in {{position}} presso {{company}}. Sebbene nuovo nel settore, porto {{skills}} e grande motivazione. {{achievements}} Sono pronto a imparare e crescere con il vostro team.",
+      closing: "Grazie per aver considerato la mia candidatura.",
+      signature: "Cordiali saluti,\n{{name}}"
+    },
+    de: {
+      opening: "Liebe {{company}},",
+      body: "Ich bin ein enthusiastischer Nachwuchsfachmann, der meine Karriere in {{position}} bei {{company}} starten möchte. Obwohl neu in der Branche, bringe ich {{skills}} und große Motivation mit. {{achievements}} Ich bin bereit, mit Ihrem Team zu lernen und zu wachsen.",
+      closing: "Vielen Dank, dass Sie meine Bewerbung in Betracht ziehen.",
+      signature: "Mit freundlichen Grüßen,\n{{name}}"
+    }
+  }
+};
+
+// ============= i18n LABELS =============
+const labels = {
+  es: {
+    wordcount: "palabras",
+    readtime: "minuto",
+    suggestions: "Sugerencias",
+    tips: "Pro Tips",
+    metrics: "Métricas",
+    quality: "Calidad"
+  },
+  en: {
+    wordcount: "words",
+    readtime: "minute",
+    suggestions: "Suggestions",
+    tips: "Pro Tips",
+    metrics: "Metrics",
+    quality: "Quality"
+  },
+  pt: {
+    wordcount: "palavras",
+    readtime: "minuto",
+    suggestions: "Sugestões",
+    tips: "Pro Tips",
+    metrics: "Métricas",
+    quality: "Qualidade"
+  },
+  fr: {
+    wordcount: "mots",
+    readtime: "minute",
+    suggestions: "Suggestions",
+    tips: "Pro Tips",
+    metrics: "Métriques",
+    quality: "Qualité"
+  },
+  it: {
+    wordcount: "parole",
+    readtime: "minuto",
+    suggestions: "Suggerimenti",
+    tips: "Pro Tips",
+    metrics: "Metriche",
+    quality: "Qualità"
+  },
+  de: {
+    wordcount: "Wörter",
+    readtime: "Minute",
+    suggestions: "Vorschläge",
+    tips: "Pro Tipps",
+    metrics: "Metriken",
+    quality: "Qualität"
+  }
+};
+
+// ============= EVENT LISTENERS =============
+window.addEventListener("load", () => {
+  loadProfile();
+  loadTheme();
+  updateOnFormChange();
+});
+
+// ============= FUNCTIONS =============
+
+function loadProfile() {
+  const saved = localStorage.getItem("coverLetterMaster_draft");
+  if (saved) {
+    formData = JSON.parse(saved);
+    Object.keys(formData).forEach(key => {
+      const el = document.getElementById("f_" + key);
+      if (el) el.value = formData[key];
+    });
+  }
+}
+
+function saveProfile() {
+  localStorage.setItem("coverLetterMaster_draft", JSON.stringify(formData));
+}
+
+function updateOnFormChange() {
+  // Collect form data
+  formData.name = document.getElementById("f_name").value;
+  formData.email = document.getElementById("f_email").value;
+  formData.phone = document.getElementById("f_phone").value;
+  formData.company = document.getElementById("f_company").value;
+  formData.position = document.getElementById("f_position").value;
+  formData.skills = document.getElementById("f_skills").value;
+  formData.achievements = document.getElementById("f_achievements").value;
+  formData.tone = document.getElementById("f_tone").value;
+
+  currentTemplate = document.getElementById("f_template").value;
+
+  saveProfile();
+  generateCoverLetter();
+  calculateScore();
+  generateSuggestions();
+  displayMetrics();
+  displayTips();
+}
+
+function generateCoverLetter() {
+  const template = templates[currentTemplate][currentLang];
+  if (!template) return;
+
+  let letter = `${new Date().toLocaleDateString()}\n\n`;
+  letter += template.opening.replace("{{company}}", formData.company) + "\n\n";
+  letter += template.body
+    .replace("{{company}}", formData.company)
+    .replace("{{position}}", formData.position)
+    .replace("{{skills}}", formData.skills)
+    .replace("{{achievements}}", formData.achievements ? `Concretamente, ${formData.achievements.substring(0, 100)}...` : "") + "\n\n";
+  letter += template.closing + "\n\n";
+  letter += template.signature.replace("{{name}}", formData.name);
+
+  document.getElementById("preview").innerHTML = `<div style="white-space: pre-wrap; font-size: 13px; line-height: 1.8;">${escapeHtml(letter)}</div>`;
+}
+
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  document.getElementById("f_language").value = lang;
+  updateOnFormChange();
+}
+
+function calculateScore() {
+  const preview = document.getElementById("preview").innerText;
+  const wordCount = preview.split(/\s+/).length;
+
+  let score = 50; // base score
+
+  // Word count (ideal 250-350)
+  if (wordCount >= 250 && wordCount <= 350) score += 20;
+  else if (wordCount >= 200 && wordCount <= 400) score += 10;
+
+  // Personalization
+  if (formData.company && preview.includes(formData.company)) score += 15;
+
+  // Achievements
+  if (formData.achievements) score += 15;
+
+  // Structure
+  if (preview.includes(formData.name)) score += 10;
+
+  score = Math.min(100, score);
+  currentScore = score;
+
+  document.getElementById("score_val").innerText = score;
+  document.getElementById("score_label").innerText = score >= 70 ? "✅ Excelente" : score >= 50 ? "⚠️ Mejorable" : "❌ Bajo";
+
+  // Update ring color
+  const ring = document.getElementById("ring_fg");
+  let color = "#b3261e"; // red
+  if (score >= 70) color = "#1f4d3f"; // green
+  else if (score >= 50) color = "#f7c500"; // yellow
+
+  ring.setAttribute("stroke", color);
+}
+
+function displayMetrics() {
+  const preview = document.getElementById("preview").innerText;
+  const wordCount = preview.split(/\s+/).length;
+  const readTime = Math.ceil(wordCount / 200);
+
+  document.getElementById("wordcount").innerText = wordCount;
+  document.getElementById("readtime").innerText = readTime;
+}
+
+function generateSuggestions() {
+  const suggestions = [];
+  const preview = document.getElementById("preview").innerText;
+  const wordCount = preview.split(/\s+/).length;
+
+  if (wordCount < 250) suggestions.push("Expande con más detalles sobre tu experiencia");
+  if (wordCount > 350) suggestions.push("Reduce la extensión, intenta ser más conciso");
+  if (!formData.company) suggestions.push("Personaliza con el nombre de la empresa");
+  if (!formData.achievements) suggestions.push("Incluye logros específicos con números");
+  if (currentScore < 70) suggestions.push("Mejora la calidad: personaliza más");
+
+  let html = suggestions.length > 0 
+    ? suggestions.map(s => `<li>💡 ${s}</li>`).join("")
+    : "<li>¡Excelente trabajo! Sigue así</li>";
+
+  document.getElementById("suggestions_list").innerHTML = html;
+}
+
+function displayTips() {
+  const tips = {
+    finance: ["Menciona logros financieros con ROI", "Usa términos: risk, compliance, portfolio", "Formal tone is key"],
+    tech: ["Menciona tecnologías específicas", "Añade enlace a GitHub o portfolio", "Destaca proyectos impactantes"],
+    creative: ["Muestra tu portfolio o trabajo anterior", "Expresa tu visión creativa", "Sé auténtico/a en tu tone"],
+    sales: ["Incluye números de ventas/resultados", "Destaca tu track record", "Muestra entusiasmo por el rol"],
+    healthcare: ["Enfatiza el cuidado del paciente", "Menciona certificaciones relevantes", "Muestra empatía y dedica"],
+    executive: ["Destaca logros estratégicos", "Menciona P&L manejado", "Demuestra liderazgo"],
+    hr: ["Destaca mejoras de cultura", "Menciona programas de retención", "Muestra impacto en employees"],
+    education: ["Muestra impacto en estudiantes", "Menciona métodos innovadores", "Destaca pasión por aprendizaje"],
+    logistics: ["Menciona mejoras de eficiencia", "Destaca reducción de costos", "Muestra expertise operacional"],
+    entry: ["Muestra disposición de aprender", "Destaca proyectos académicos", "Sé genuino y entusiasta"]
+  };
+
+  const tipsList = tips[currentTemplate] || tips.entry;
+  const html = tipsList.slice(0, 3).map(tip => `<li>✨ ${tip}</li>`).join("");
+  document.getElementById("tips_list").innerHTML = html;
+}
+
+function exportPDF() {
+  const element = document.getElementById("preview");
+  const opt = {
+    margin: 10,
+    filename: `${formData.name}_${formData.company}_CoverLetter.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+  };
+  html2pdf().set(opt).from(element).save();
+  showToast("📄 PDF descargado");
+}
+
+function exportWord() {
+  alert("📄 Word export - Requiere configuración adicional (docx.min.js)");
+}
+
+function copyToClipboard() {
+  const text = document.getElementById("preview").innerText;
+  navigator.clipboard.writeText(text);
+  showToast("📋 Copiado al portapapeles");
+}
+
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerText = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+function showChecklist() {
+  document.getElementById("checklist_modal").classList.add("show");
+}
+
+function closeChecklist() {
+  document.getElementById("checklist_modal").classList.remove("show");
+}
+
+function showExamples() {
+  alert("📚 Ejemplos comparativos - Coming soon!");
+}
+
+function toggleDarkMode() {
+  const root = document.documentElement;
+  const isDark = root.getAttribute("data-theme") === "dark";
+  root.setAttribute("data-theme", isDark ? "light" : "dark");
+  localStorage.setItem("coverLetterMaster_theme", isDark ? "light" : "dark");
+}
+
+function loadTheme() {
+  const theme = localStorage.getItem("coverLetterMaster_theme") || "light";
+  document.documentElement.setAttribute("data-theme", theme);
+}
+</script>
+</body>
+</html>
