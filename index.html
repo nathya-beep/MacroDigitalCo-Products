@@ -640,6 +640,8 @@ main {
         <button class="btn btn-ghost" onclick="copyToClipboard()" title="Copiar al portapapeles">📋</button>
       </div>
       <button class="btn btn-ghost" onclick="showChecklist()" title="Revisar antes de enviar">✅ Checklist</button>
+      <button class="btn btn-ghost" onclick="saveDraft()" title="Guardar este borrador">💾 Guardar</button>
+      <button class="btn btn-ghost" onclick="showDrafts()" title="Ver borradores guardados">📂 Mis Borradores</button>
     </div>
   </aside>
 
@@ -1185,15 +1187,67 @@ window.addEventListener("load", () => {
 
 // ============= FUNCTIONS =============
 
-function loadProfile() {
-  const saved = localStorage.getItem("coverLetterMaster_draft");
-  if (saved) {
-    formData = JSON.parse(saved);
+function saveDraft(name = null) {
+  const draftName = name || `Draft ${new Date().toLocaleTimeString()}`;
+  const drafts = JSON.parse(localStorage.getItem("coverLetterMaster_drafts")) || [];
+  
+  drafts.unshift({
+    name: draftName,
+    data: formData,
+    timestamp: new Date().toISOString(),
+    score: currentScore
+  });
+  
+  // Keep only last 5
+  drafts.splice(5);
+  localStorage.setItem("coverLetterMaster_drafts", JSON.stringify(drafts));
+  showToast(`💾 Borrador guardado: ${draftName}`);
+}
+
+function loadDraft(index) {
+  const drafts = JSON.parse(localStorage.getItem("coverLetterMaster_drafts")) || [];
+  if (drafts[index]) {
+    formData = drafts[index].data;
     Object.keys(formData).forEach(key => {
       const el = document.getElementById("f_" + key);
       if (el) el.value = formData[key];
     });
+    currentTemplate = document.getElementById("f_template").value;
+    updateOnFormChange();
+    showToast(`📂 Borrador cargado: ${drafts[index].name}`);
   }
+}
+
+function showDrafts() {
+  const drafts = JSON.parse(localStorage.getItem("coverLetterMaster_drafts")) || [];
+  if (drafts.length === 0) {
+    showToast("No hay borradores guardados");
+    return;
+  }
+  
+  let html = `<h3 style="margin-bottom: 12px;">Mis Borradores</h3>`;
+  drafts.forEach((draft, i) => {
+    const date = new Date(draft.timestamp).toLocaleDateString();
+    html += `
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--uiline);">
+        <div>
+          <div style="font-weight: 600;">${draft.name}</div>
+          <div style="font-size: 11px; color: var(--muted);">${date} · ${draft.score || '?'}/100</div>
+        </div>
+        <button class="btn btn-primary" onclick="loadDraft(${i}); this.closest('.modal').remove()" style="padding: 6px 12px; font-size: 11px;">Cargar</button>
+      </div>
+    `;
+  });
+  
+  const modal = document.createElement("div");
+  modal.className = "modal show";
+  modal.innerHTML = `
+    <div class="modal-content">
+      ${html}
+      <button class="btn btn-ghost" onclick="this.closest('.modal').remove()" style="width: 100%; margin-top: 12px;">Cerrar</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
 }
 
 function saveProfile() {
@@ -1257,36 +1311,85 @@ function setLanguage(lang) {
 
 function calculateScore() {
   const preview = document.getElementById("preview").innerText;
-  const wordCount = preview.split(/\s+/).length;
+  const wordCount = preview.split(/\s+/).filter(w => w.length > 0).length;
 
   let score = 50; // base score
 
-  // Word count (ideal 250-350)
+  // 1. Word count (ideal 250-350) - 20 points
   if (wordCount >= 250 && wordCount <= 350) score += 20;
   else if (wordCount >= 200 && wordCount <= 400) score += 10;
+  else if (wordCount >= 150 || wordCount <= 500) score += 5;
 
-  // Personalization
-  if (formData.company && preview.includes(formData.company)) score += 15;
+  // 2. Personalization (company mentioned) - 15 points
+  const companyMentions = (preview.match(new RegExp(formData.company, 'gi')) || []).length;
+  if (companyMentions >= 2) score += 15;
+  else if (companyMentions === 1) score += 8;
 
-  // Achievements
-  if (formData.achievements) score += 15;
+  // 3. Achievements/Numbers - 15 points
+  const hasNumbers = /\d{1,3}[%,\.]/.test(preview);
+  const hasMetrics = /(\$|€|£|\d+[kmb])\s?\d+/.test(preview);
+  if (hasMetrics) score += 15;
+  else if (hasNumbers) score += 10;
+  else if (formData.achievements) score += 5;
 
-  // Structure
-  if (preview.includes(formData.name)) score += 10;
+  // 4. Structure - 15 points
+  const hasOpening = preview.length > 50 && preview.split('\n')[0].length > 10;
+  const hasClosing = preview.toLowerCase().includes('thank') || preview.toLowerCase().includes('look forward');
+  const hasSignature = preview.includes(formData.name);
+  const structurePoints = (hasOpening ? 5 : 0) + (hasClosing ? 5 : 0) + (hasSignature ? 5 : 0);
+  score += structurePoints;
 
-  score = Math.min(100, score);
+  // 5. Skills mentioned - 10 points
+  if (formData.skills) {
+    const skillCount = formData.skills.split(',').length;
+    if (skillCount >= 4) score += 10;
+    else if (skillCount >= 3) score += 7;
+    else if (skillCount >= 2) score += 3;
+  }
+
+  // 6. Tone match - 10 points
+  const toneKeywords = {
+    formal: ['professional', 'expertise', 'honored', 'respectfully', 'strategic'],
+    casual: ['excited', 'love', 'passion', 'enthusiastic', 'thrilled'],
+    enthusiastic: ['thrilled', 'excited', 'passionate', 'driven', 'inspired']
+  };
+  
+  const selectedTone = document.getElementById("f_tone").value;
+  const keywords = toneKeywords[selectedTone] || [];
+  const matchedKeywords = keywords.filter(k => preview.toLowerCase().includes(k)).length;
+  if (matchedKeywords >= 2) score += 10;
+  else if (matchedKeywords === 1) score += 5;
+
+  // 7. Language quality - 5 points
+  const doubleSpaces = (preview.match(/  /g) || []).length;
+  const multiplePeriods = (preview.match(/\.\./g) || []).length;
+  const errorCount = doubleSpaces + multiplePeriods;
+  if (errorCount === 0) score += 5;
+
+  score = Math.min(100, Math.max(0, score));
   currentScore = score;
 
   document.getElementById("score_val").innerText = score;
-  document.getElementById("score_label").innerText = score >= 70 ? "✅ Excelente" : score >= 50 ? "⚠️ Mejorable" : "❌ Bajo";
+  
+  let label = "Calculando…";
+  if (score >= 85) label = "✅ Excelente";
+  else if (score >= 70) label = "✔️ Bueno";
+  else if (score >= 50) label = "⚠️ Mejorable";
+  else label = "❌ Necesita trabajo";
+  
+  document.getElementById("score_label").innerText = label;
 
   // Update ring color
   const ring = document.getElementById("ring_fg");
   let color = "#b3261e"; // red
-  if (score >= 70) color = "#1f4d3f"; // green
+  if (score >= 85) color = "#1f4d3f"; // green (dark)
+  else if (score >= 70) color = "#2a9d5a"; // light green
   else if (score >= 50) color = "#f7c500"; // yellow
 
   ring.setAttribute("stroke", color);
+  const circumference = 2 * Math.PI * 18;
+  const offset = circumference - (score / 100) * circumference;
+  ring.setAttribute("stroke-dashoffset", offset);
 }
 
 function displayMetrics() {
@@ -1303,53 +1406,131 @@ function generateSuggestions() {
   const preview = document.getElementById("preview").innerText;
   const wordCount = preview.split(/\s+/).length;
 
-  if (wordCount < 250) suggestions.push("Expande con más detalles sobre tu experiencia");
-  if (wordCount > 350) suggestions.push("Reduce la extensión, intenta ser más conciso");
-  if (!formData.company) suggestions.push("Personaliza con el nombre de la empresa");
-  if (!formData.achievements) suggestions.push("Incluye logros específicos con números");
-  if (currentScore < 70) suggestions.push("Mejora la calidad: personaliza más");
+  // Length analysis
+  if (wordCount < 200) suggestions.push("⚠️ Muy corta: expande con más detalles (ideal 250-350)");
+  else if (wordCount > 400) suggestions.push("⚠️ Muy larga: reduce la extensión, intenta ser conciso");
+
+  // Personalization
+  if (!formData.company || preview.match(formData.company).length < 2) {
+    suggestions.push("📝 Personaliza más: menciona {{company}} al menos 2 veces");
+  }
+
+  // Achievements
+  if (!formData.achievements || formData.achievements.length < 20) {
+    suggestions.push("📊 Agrega logros cuantitativos (números, %, $ resultados)");
+  }
+
+  // Skills
+  const skills = formData.skills.split(',').length;
+  if (skills < 3) suggestions.push("🔧 Amplía tus habilidades: menciona al menos 3-4");
+
+  // Score-based
+  if (currentScore < 50) suggestions.push("🎯 Mejora general: sigue todos los puntos anteriores");
+  if (currentScore < 70 && currentScore >= 50) suggestions.push("✨ Casi listo: pequños ajustes para excelencia");
+
+  // Generic fixes
+  if (!preview.includes(formData.name)) suggestions.push("✍️ Asegúrate de incluir tu firma completa");
 
   let html = suggestions.length > 0 
-    ? suggestions.map(s => `<li>💡 ${s}</li>`).join("")
-    : "<li>¡Excelente trabajo! Sigue así</li>";
+    ? suggestions.slice(0, 4).map(s => `<li>${s}</li>`).join("")
+    : "<li>✅ ¡Excelente trabajo! Tu carta está lista</li>";
 
   document.getElementById("suggestions_list").innerHTML = html;
 }
 
 function displayTips() {
   const tips = {
-    finance: ["Menciona logros financieros con ROI", "Usa términos: risk, compliance, portfolio", "Formal tone is key"],
-    tech: ["Menciona tecnologías específicas", "Añade enlace a GitHub o portfolio", "Destaca proyectos impactantes"],
-    creative: ["Muestra tu portfolio o trabajo anterior", "Expresa tu visión creativa", "Sé auténtico/a en tu tone"],
-    sales: ["Incluye números de ventas/resultados", "Destaca tu track record", "Muestra entusiasmo por el rol"],
-    healthcare: ["Enfatiza el cuidado del paciente", "Menciona certificaciones relevantes", "Muestra empatía y dedica"],
-    executive: ["Destaca logros estratégicos", "Menciona P&L manejado", "Demuestra liderazgo"],
-    hr: ["Destaca mejoras de cultura", "Menciona programas de retención", "Muestra impacto en employees"],
-    education: ["Muestra impacto en estudiantes", "Menciona métodos innovadores", "Destaca pasión por aprendizaje"],
-    logistics: ["Menciona mejoras de eficiencia", "Destaca reducción de costos", "Muestra expertise operacional"],
-    entry: ["Muestra disposición de aprender", "Destaca proyectos académicos", "Sé genuino y entusiasta"]
+    finance: [
+      "🎯 Menciona ROI, margen, ahorros de costos (datos cuantitativos)",
+      "🔐 Usa términos: risk management, compliance, portfolio, fiduciary",
+      "📊 Formal: evita jerga casual, mantén tono corporativo",
+      "💼 Destaca: auditorías exitosas, regulaciones manejadas"
+    ],
+    tech: [
+      "💻 Especifica tecnologías: Node.js, React, Kubernetes, AWS",
+      "📈 Incluye métricas: \"redujo latencia 65%\", \"procesó 10k/sec\"",
+      "🔗 Añade portfolio/GitHub link con ejemplos reales",
+      "⭐ Abierto: menciona contribuciones open-source"
+    ],
+    creative: [
+      "🎨 Adjunta o enlaza portfolio/behance (es esencial)",
+      "👥 Menciona colaboraciones: clientes, campañas icónicas",
+      "📱 Destaca awards: Cannes Lions, Webby, locales",
+      "🎬 Sé auténtico: muestra tu visión única y estilo"
+    ],
+    sales: [
+      "📈 Números: cuota, pipeline, deal size ($XXX,XXX)",
+      "🏆 Ranking: \"#1 en ventas\", \"top 5%\", \"130% cuota\"",
+      "🤝 Relaciones: \"40+ contactos C-suite\", \"red de partners\"",
+      "💰 Impact: \"$4.2M ARR\", \"crecimiento territorio 2x\""
+    ],
+    healthcare: [
+      "❤️ Paciente-centric: cuidado, empatía, dedicación",
+      "📜 Certificaciones: NCLEX, BLS, especialidades relevantes",
+      "🎓 Educación continua: cursos, trainings, mejora",
+      "👩‍⚕️ Ética: compliance, confidencialidad (HIPAA)"
+    ],
+    executive: [
+      "👔 Estratégico: visión, liderazgo, P&L management",
+      "📊 Métricas ejecutivas: \"$500M revenue\", \"15% CAGR\",  \"team de 200+\"",
+      "🔄 Transformación: cambios culturales, M&A, IPO",
+      "🌍 Global: experiencia internacional, mercados múltiples"
+    ],
+    hr: [
+      "👥 Cultura: iniciativas que mejoraron engagement, retention",
+      "📋 Compliance: legislación, diversidad, FMLA",
+      "💡 Programas: mentoring, sucesión, performance",
+      "📈 Métricas: \"reducción turnover 35%\", \"eNPS +20\""
+    ],
+    education: [
+      "🎓 Impacto estudiantil: mejoras en aprendizaje, graduación",
+      "📚 Innovación: nuevos cursos, métodos, tecnología",
+      "🏆 Logros: estudiantes en universidades top, fellowships",
+      "💪 Dedicación: mentoring, tutoría, apoyo personalizado"
+    ],
+    logistics: [
+      "⚡ Eficiencia: \"reducción costos 25%\", \"reducción tiempo X%\"",
+      "🚚 Operacional: supply chain, inventory, logistics systems",
+      "📦 Escalabilidad: manejaste volumen, manageabilidad",
+      "💰 ROI: mejoras de margen, optimización presupuesto"
+    ],
+    entry: [
+      "🎓 Educación: GPA alto, escuela prestigiosa, honores",
+      "💼 Internships: proyecto exitoso, mentorship, permanencia",
+      "🚀 Side projects: apps, websites, código open-source",
+      "📚 Aprendizaje: disposición, rápido crecimiento, potencial"
+    ]
   };
 
   const tipsList = tips[currentTemplate] || tips.entry;
-  const html = tipsList.slice(0, 3).map(tip => `<li>✨ ${tip}</li>`).join("");
+  const html = tipsList.slice(0, 4).map(tip => `<li>${tip}</li>`).join("");
   document.getElementById("tips_list").innerHTML = html;
 }
 
 function exportPDF() {
   const element = document.getElementById("preview");
   const opt = {
-    margin: 10,
-    filename: `${formData.name}_${formData.company}_CoverLetter.pdf`,
+    margin: 15,
+    filename: `${formData.name.replace(/\s/g, '_')}_${formData.company.replace(/\s/g, '_')}_CoverLetter.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2 },
     jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
   };
   html2pdf().set(opt).from(element).save();
-  showToast("📄 PDF descargado");
+  showToast("✅ PDF descargado exitosamente");
+  saveDraft();
 }
 
 function exportWord() {
-  alert("📄 Word export - Requiere configuración adicional (docx.min.js)");
+  const preview = document.getElementById("preview").innerText;
+  const blob = new Blob([preview], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${formData.name.replace(/\s/g, '_')}_${formData.company.replace(/\s/g, '_')}_CoverLetter.doc`;
+  link.click();
+  showToast("✅ Word descargado exitosamente");
+  saveDraft();
 }
 
 function copyToClipboard() {
@@ -1375,7 +1556,130 @@ function closeChecklist() {
 }
 
 function showExamples() {
-  alert("📚 Ejemplos comparativos - Coming soon!");
+  const examples = {
+    finance: {
+      excellent: {
+        title: "✅ Excelente",
+        text: "Dear Goldman Sachs Hiring Team,\n\nI am writing to express my strong interest in the Senior Financial Analyst position at Goldman Sachs. With 7+ years of experience in quantitative analysis and risk management, I have consistently delivered measurable results. Most notably, I spearheaded a portfolio optimization initiative that reduced risk exposure by 23% while maintaining a 4.2% alpha, generating $8.5M in incremental value.\n\nMy expertise spans advanced statistical modeling, Python/R programming, and VBA automation. I am particularly drawn to Goldman Sachs' commitment to innovation in financial markets, and I am confident my analytical rigor and strategic mindset will make a meaningful contribution to your team.\n\nThank you for considering my application. I look forward to discussing how I can drive alpha and operational excellence at Goldman Sachs.",
+        why: "✓ Específico: menciona empresa, rol, años\n✓ Cuantificado: 23%, 4.2%, $8.5M\n✓ Técnico: modelado, Python, VBA\n✓ Profesional: formal, conciso"
+      },
+      average: {
+        title: "⚠️ Promedio",
+        text: "Dear Goldman Sachs,\n\nI am interested in the Financial Analyst position at your company. I have worked in finance for several years and am good at analyzing data and managing risk. I have completed projects that improved results and I think I would be a good fit for your team.\n\nI have skills in financial modeling and programming. I am interested in your company because it is a leader in the financial industry.\n\nThank you for your consideration.",
+        why: "✗ Genérico: no menciona empresa específica\n✗ Sin números: sin logros cuantificados\n✗ Corto: muy breve, falta profundidad\n✗ Débil: \"good at\", \"I think\""
+      },
+      weak: {
+        title: "❌ Débil",
+        text: "Hi,\n\nI want to work for your company. I have a degree in finance and I like working with numbers. I have done some internships and I think I am ready for a job. Please let me know if you want to hire me.",
+        why: "✗ Casual: \"Hi\", sin profesionalismo\n✗ Vago: sin detalles, sin logros\n✗ Muy corto: apenas 2 párrafos\n✗ Débil: \"I think I'm ready\""
+      }
+    },
+    tech: {
+      excellent: {
+        title: "✅ Excelente",
+        text: "Hello Airbnb Engineering Team,\n\nI'm thrilled to apply for the Senior Backend Engineer position. As a full-stack engineer with 6+ years at scale-up environments, I've architected systems handling 50M+ daily transactions using Node.js, PostgreSQL, and AWS.\n\nKey achievements:\n• Led microservices migration reducing API latency by 65% (2.1s → 700ms)\n• Built real-time data pipeline processing 10k events/sec using Kafka\n• Mentored 5 engineers; 3 promoted to senior roles\n\nMy GitHub: github.com/myprofile (15k+ stars). I'm particularly interested in Airbnb's challenge-scaling platform reliability globally.\n\nLooking forward to discussing my fit.",
+        why: "✓ Específico: tecnologías (Node.js, Kafka)\n✓ Métricas: 65%, 50M, 10k/sec\n✓ Portfolio: GitHub link\n✓ Técnico: microservices, pipeline\n✓ Leadership: mentored 5 engineers"
+      },
+      average: {
+        title: "⚠️ Promedio",
+        text: "Dear Airbnb,\n\nI am a backend engineer with several years of experience. I have worked with various technologies including Node.js and databases. I have built applications and worked on different projects. I think I would be good for your company because I am a hard worker and quick learner.\n\nI have some GitHub projects if you want to see them.\n\nThank you.",
+        why: "✗ Genérico: \"various technologies\"\n✗ Sin números: sin logros medibles\n✗ Sin portfolio: \"if you want to see them\"\n✗ Débil: \"hard worker and quick learner\""
+      },
+      weak: {
+        title: "❌ Débil",
+        text: "Hi there,\n\nI code in Python and JavaScript. I have made some apps and they work pretty good. I want to work at Airbnb because it's a cool company. I am available to start right away.",
+        why: "✗ Casual: \"Hi there\", \"pretty good\"\n✗ Sin logros: solo lenguajes\n✗ Sin portfolio: nada comprobable\n✗ Superficial: \"cool company\""
+      }
+    },
+    sales: {
+      excellent: {
+        title: "✅ Excelente",
+        text: "Dear Salesforce Hiring Team,\n\nAs a top-performing Account Executive with 8+ years B2B SaaS experience, I've consistently exceeded quota by 130-150%. Most recently, I closed $4.2M ARR in new business while maintaining 95%+ net retention, growing my territory from $8M to $18M in 18 months.\n\nKey wins:\n• Closed Acme Corp ($1.8M deal) through consultative selling & C-suite relationships\n• Built 40-person network in enterprise tech; 65% conversion rate\n• Ranked #1 in deal velocity (47-day sales cycle)\n\nI'm drawn to Salesforce's innovation culture and confident I can accelerate your enterprise segment growth.",
+        why: "✓ Cuantificado: 130%, $4.2M, 95%\n✓ Específico: deals, C-suite, 47 días\n✓ Comprobado: #1 ranking\n✓ Estratégico: net retention focus"
+      },
+      average: {
+        title: "⚠️ Promedio",
+        text: "Dear Salesforce,\n\nI am a sales professional with experience selling SaaS products. I have been successful in my role and have closed deals with different companies. I am good at building relationships and closing sales. I think I would be great for your company because I am results-oriented.\n\nI am excited about the opportunity.",
+        why: "✗ Genérico: \"various companies\"\n✗ Sin números: sin cuota, sin ARR\n✗ Vago: \"successful\", sin detalles\n✗ Cliché: \"results-oriented\""
+      },
+      weak: {
+        title: "❌ Débil",
+        text: "Hi,\n\nI want to work in sales at Salesforce. I have sold things before and I am good with people. Your company is great. Let me know if you need someone.",
+        why: "✗ Casual: sin profesionalismo\n✗ Sin logros: \"sold things\"\n✗ Sin números: cero métrica\n✗ Débil: \"good with people\""
+      }
+    },
+    creative: {
+      excellent: {
+        title: "✅ Excelente",
+        text: "Hello Creative Director at Nike,\n\nI'm a design strategist with 9+ years creating campaigns for brands like Adidas, Puma, and Lululemon. My work has driven 3M+ impressions and contributed to +34% brand awareness lift.\n\nRecent highlights:\n• \"Move United\" campaign: 2.1M views, 47k engagement (5.2% rate)\n• Art direction for seasonal collection: $12M revenue impact\n• Built design system improving team efficiency by 40%\n\nI'm inspired by Nike's \"Just Do It\" philosophy and confident I can bring bold, athlete-centric creativity to your global campaigns.\n\nPortfolio: behance.net/mywork",
+        why: "✓ Portfolio link concreto\n✓ Métricas: 3M, +34%, 2.1M views\n✓ Específico: clientes, campañas\n✓ Impacto: $12M, 40% efficiency"
+      },
+      average: {
+        title: "⚠️ Promedio",
+        text: "Dear Nike,\n\nI am a creative designer with experience in advertising and branding. I have worked on various projects for different brands and am passionate about design. I think my creative skills would be a great addition to your team.\n\nI have a portfolio of my work.",
+        why: "✗ Sin números: sin engagement, views\n✗ Vago: \"various projects\"\n✗ Sin portfolio link: solo texto\n✗ Débil: \"passionate about design\""
+      },
+      weak: {
+        title: "❌ Débil",
+        text: "Hi,\n\nI love design and I want to work at Nike. I have made some designs and they look cool. I know Adobe programs. I am very creative.",
+        why: "✗ Casual: \"Hi\", \"cool\"\n✗ Sin portfolio: solo afirmaciones\n✗ Genérico: \"very creative\"\n✗ Sin logros: cero evidencia"
+      }
+    },
+    entry: {
+      excellent: {
+        title: "✅ Excelente",
+        text: "Dear Google Hiring Team,\n\nAs a recent graduate (BS Computer Science, UC Berkeley, 3.8 GPA) passionate about full-stack development, I'm excited to apply for the Associate Product Manager role. Although new to industry, I bring proven problem-solving skills and internship experience.\n\nKey achievements:\n• Internship at Stripe: Built payment dashboard reducing merchant friction by 38%\n• Led capstone project: ML-powered expense tracker (100+ beta users, 4.6★ rating)\n• Side project: Open-source React library (500+ GitHub stars)\n\nI'm driven by Google's mission to organize information and confident I'll grow rapidly in your environment.",
+        why: "✓ Específico: UC Berkeley, 3.8 GPA\n✓ Métricas: 38%, 500★, 4.6 rating\n✓ Evidencia: Stripe internship\n✓ Maduro: capstone, open-source"
+      },
+      average: {
+        title: "⚠️ Promedio",
+        text: "Dear Google,\n\nI am a recent graduate with a degree in Computer Science. I am interested in working at Google and think I would be a good fit. I have some experience from internships and I am a quick learner. I am excited about technology and want to grow in my career.\n\nThank you for your consideration.",
+        why: "✗ Vago: \"some experience\"\n✗ Sin números: sin GPA, sin logros\n✗ Sin portfolio: nada comprobable\n✗ Genérico: \"quick learner\""
+      },
+      weak: {
+        title: "❌ Débil",
+        text: "Hi Google,\n\nI just graduated and want to work at your company. I like coding and I am a hard worker. I have done some projects in school. Please hire me.",
+        why: "✗ Casual: sin profesionalismo\n✗ Sin números: sin GPA, fechas\n✗ Vago: \"some projects\"\n✗ Débil: \"please hire me\""
+      }
+    }
+  };
+
+  const currentExamples = examples[currentTemplate] || examples.entry;
+  
+  let html = `
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: 12px;">
+  `;
+  
+  Object.entries(currentExamples).forEach(([level, data]) => {
+    html += `
+      <div style="border: 1px solid var(--uiline); border-radius: 8px; padding: 12px; background: var(--paper);">
+        <h4 style="margin-bottom: 8px; font-size: 12px; color: var(--accent);">${data.title}</h4>
+        <div style="background: #f5f3f0; padding: 10px; border-radius: 6px; margin-bottom: 10px; white-space: pre-wrap; font-size: 11px; line-height: 1.4; color: #666;">
+          ${data.text.substring(0, 280)}...
+        </div>
+        <div style="font-size: 11px; color: var(--muted); line-height: 1.5; white-space: pre-wrap;">
+          ${data.why}
+        </div>
+      </div>
+    `;
+  });
+  
+  html += `</div>`;
+
+  const modal = document.createElement("div");
+  modal.className = "modal show";
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+      <h2>📚 Ejemplos Comparativos - ${currentTemplate.toUpperCase()}</h2>
+      <p style="margin-bottom: 16px;">Analiza qué hace que cada carta sea excelente, promedio o débil:</p>
+      ${html}
+      <div class="actions" style="margin-top: 20px; position: static; background: none; padding: 0;">
+        <button class="btn btn-ghost" onclick="this.closest('.modal').remove()" style="width: 100%;">Entendido</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
 }
 
 function toggleDarkMode() {
